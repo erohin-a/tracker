@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Трекер — KB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="База знаний проекта «Трекер»">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/themes/vue.css" title="light">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/themes/dark.css" title="dark" disabled>
+  <style>
+    :root {
+      --theme-color: #4a90e2;
+      --sidebar-width: 320px;
+    }
+    .sidebar-toggle { background-color: #4a90e2; }
+    .markdown-section code { background: #f4f6f8; padding: 2px 6px; border-radius: 4px; }
+    .markdown-section table { display: table; width: 100%; }
+    .markdown-section td, .markdown-section th { padding: 6px 10px; }
+    .theme-toggle {
+      position: fixed; top: 12px; right: 20px; z-index: 100;
+      padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px;
+      background: #fff; cursor: pointer; font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Сменить тему">🌓 Тема</button>
+  <div id="app">Загрузка…</div>
+
+  <script>
+    // Автоопределение темы
+    function setTheme(theme) {
+      document.querySelector('link[title="light"]').disabled = (theme !== 'light');
+      document.querySelector('link[title="dark"]').disabled  = (theme !== 'dark');
+      localStorage.setItem('tracker-theme', theme);
+    }
+    function toggleTheme() {
+      const current = localStorage.getItem('tracker-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+    (function() {
+      const saved = localStorage.getItem('tracker-theme');
+      if (saved) setTheme(saved);
+      else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+    })();
+  </script>
+
+  <script>
+    window.$docsify = {
+      name: 'Трекер — KB',
+      repo: '',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      maxLevel: 4,
+      homepage: 'HANDOFF.md',
+      notFoundPage: true,
+      search: {
+        placeholder: 'Поиск по KB…',
+        noData: 'Ничего не найдено',
+        paths: 'auto',
+        depth: 4
+      },
+      copyCode: {
+        buttonText: 'Копировать',
+        errorText: 'Ошибка',
+        successText: 'Скопировано'
+      },
+      pagination: {
+        previousText: 'Назад',
+        nextText: 'Вперёд',
+        crossChapter: true
+      },
+      plugins: [
+        function(hook) {
+          hook.doneEach(function() {
+            document.title = (document.querySelector('.markdown-section h1')?.textContent || 'Трекер') + ' — KB';
+          });
+        }
+      ]
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-powershell.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-sql.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+</body>
+</html>

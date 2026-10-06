@@ -1,0 +1,9 @@
+<!-- Часть 1028 из 1409 -->
+# effective_duration всё ещё first-last минус паузы...
+*Хлебные крошки:* effective_duration всё ещё first-last минус паузы...
+
+[◀ Теперь: full_duration = last_event - first_event (реальное время работы)](1027_Teper_full_duration_last_event_first_event_realnoe_vremya_raboty.md) | [Оглавление](00_BCE_INDEX.md) | [но подожди, если full = last-first, то effective тоже = last-first минус паузы? ▶](1029_no_podozhdi_esli_full_last_first_to_effective_tozhe_last_first_minus_pauzy.md)
+
+---
+
+# effective_duration всё ещё first-last минус паузы... 

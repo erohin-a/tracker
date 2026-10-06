@@ -300,12 +300,12 @@
 | **Файл** | `client/config.py` |
 | **Статус** | Исправлено |
 
-#### 33. `pause_seconds > total_sec`
+#### 33. `pause_seconds (PDF/pivot — исторические, функционал удалён) > total_sec`
 | | |
 |---|---|
 | **Симптом** | Аномально длинные сессии (17 часов) |
-| **Причина** | `detect_abnormal_termination` закрывала сессию текущим временем, а не `last_activity`; плюс `pause_seconds` вычитались дважды |
-| **Решение** | `detect_abnormal_termination` использует `last_activity`; `close_session_at` с `last_activity`; `_analyze_session` не вычитает `pause_seconds` |
+| **Причина** | `detect_abnormal_termination` закрывала сессию текущим временем, а не `last_activity`; плюс `pause_seconds (PDF/pivot — исторические, функционал удалён)` вычитались дважды |
+| **Решение** | `detect_abnormal_termination` использует `last_activity`; `close_session_at` с `last_activity`; `_analyze_session` не вычитает `pause_seconds (PDF/pivot — исторические, функционал удалён)` |
 | **Файлы** | `client/db.py`, `client/main.py`, `server/web_admin.py` |
 | **Статус** | Исправлено |
 
