@@ -276,7 +276,7 @@ JSON — для API-эндпоинтов.
 
 HTML — для веб-страниц (Jinja2).
 
-StreamingResponse — для CSV/XLSX/PDF.
+StreamingResponse — для CSV/XLSX (PDF — печать из браузера).
 
 RedirectResponse — после POST-форм (PRG-паттерн).
 

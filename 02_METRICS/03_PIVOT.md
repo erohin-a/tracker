@@ -1,48 +1,27 @@
-# Pivot-таблица
-Статус: черновик
-Дата: 2026-10-02
-Связанные файлы KB: 02_METRICS\01_METRICS.md, 02_METRICS\02_REPORTS.md, 03_SERVER\02_API.md
+# 03_PIVOT.md — Pivot-таблица (УДАЛЕНО)
 
-## Назначение
-Описать интерактивную сводную таблицу (pivot) в веб-админке: зачем она нужна, как устроена, какие данные получает, как рендерится и какие имеет ограничения. Это карта для администратора, который строит сводную, и для разработчика, который её дорабатывает.
+**Статус:** функционал удалён 2026-10-06.
+**Решение:** веб-pivot на PivotTable.js убран. Причина — сложно настраивать, нельзя нормально сортировать и менять. Сводные таблицы строятся пользователем в **Excel** из нашего XLSX-экспорта (лист «Данные» + лист «ИТОГО»).
 
-## Содержание
+## Что было
 
-### Что такое pivot в «Трекере»
-- Страница `/admin/reports/pivot` — интерактивная сводная таблица, аналог сводной в Excel.
-- Реализована на **PivotTable.js** — open-source JavaScript-библиотеке с drag-and-drop интерфейсом[reference:0].
-- Отличается от обычного отчёта: пользователь сам перетаскивает поля между зонами «Строки», «Колонки», «Значения» и мгновенно видит результат.
-- Данные загружаются один раз по кнопке «Загрузить данные», дальше все перестроения происходят на клиенте, без запросов к серверу.
+- Страница `/admin/reports/pivot` — интерактивная сводная на PivotTable.js.
+- API `POST /admin/api/pivot-data` — плоские строки для pivot.
+- Кастомные агрегаторы `durationSum` / `durationAvg`.
 
-### Зачем нужен pivot
-- Быстрый анализ без выгрузки в Excel: за 10 секунд можно увидеть, кто в каком отделе сколько работает в каких программах.
-- Гибкая смена группировки: отдел → сотрудник → месяц → программа.
-- Несколько метрик одновременно: Отработано, Эффективно, Интенсивная, Пауза.
-- Уникальная фишка: среди конкурентов (Hubstaff, Toggl, Clockify) pivot-таблиц нет.
+## Что стало
 
-### Структура страницы (`/admin/reports/pivot`)
-**Форма фильтров** (не отправляется, используется через JS `fetch`):
-| Поле | id | Тип |
-|---|---|---|
-| С даты | `pivot_date_from` | date |
-| По дату | `pivot_date_to` | date |
-| Отделы | `pivot_depts` | multiple select |
-| Сотрудники | `pivot_employees` | multiple select |
-| Компьютеры | `pivot_computers` | multiple select |
+- Роут `/admin/reports/pivot` больше не открывается (шаблон `reports_pivot.html.disabled`).
+- Ссылок на pivot в меню нет.
+- Бэкенд-код не удалён (безвреден), но UI-доступа нет.
 
-**Кнопки быстрых периодов:** «0» (сегодня), «1» (вчера), «7», «30», «Этот месяц», «Прошлый месяц».
+## Замена
 
-**Кнопка загрузки:** «🔄 Загрузить данные» → `loadPivotData()`.
+- Экспорт в **XLSX**: `/admin/reports` → «Скачать XLSX». Лист «Данные» — pivot-friendly (заголовки без точек и `[]`), лист «ИТОГО» — сводка.
+- Пользователь открывает XLSX в Excel и делает **Вставка → Сводная таблица**.
 
-**Статус:** `<div id="pivot_status">` — показывает «Загрузка...», «Загружено строк: N», «Ошибка».
+## Связанные файлы
 
-**Контейнер сводной:** `<div id="pivot_output">` — сюда рендерится pivotUI.
-
-### CDN-зависимости
-PivotTable.js требует jQuery, jQuery UI и сам PivotTable:
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pivottable@2.23.0/dist/pivot.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/themes/base/jquery-ui.min.css">
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pivottable@2.23.0/dist/pivot.min.js"></script>
+- `02_METRICS\04_EXPORTS.md` — форматы CSV/XLSX.
+- `server/templates/reports.html` — экспорт из UI.
+- `server/templates/reports_pivot.html.disabled` — старый шаблон (на всякий случай).

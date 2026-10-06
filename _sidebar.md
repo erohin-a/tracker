@@ -11,7 +11,6 @@
 - **Метрики и отчёты**
   - [5 метрик](02_METRICS/01_METRICS.md)
   - [Отчёты](02_METRICS/02_REPORTS.md)
-  - [Pivot-таблица](02_METRICS/03_PIVOT.md)
   - [Экспорт](02_METRICS/04_EXPORTS.md)
   - [Календарь](02_METRICS/05_CALENDAR.md)
   - [Графики работы](02_METRICS/06_SCHEDULES.md)
