@@ -1,9 +1,0 @@
-<!-- Часть 693 из 1409 -->
-# ... operations ...
-*Хлебные крошки:* ... operations ...
-
-[◀ В самом начале](692_V_samom_nachale.md) | [Оглавление](00_BCE_INDEX.md) | [в каждой точке ▶](694_v_kazhdoy_tochke.md)
-
----
-
-# ... operations ...
