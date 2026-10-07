@@ -79,5 +79,6 @@
 
 ## Полное руководство (BCE)
 
-- [BCE — оглавление](BCE/parts/00_BCE_INDEX.md)
-- [BCE — все части](BCE/parts/_sidebar.md)
+- [BCE — оглавление](BCE/split_20261007_014522/00_BCE_INDEX.md)
+
+- [BCE — все части (навигация по разделам)](BCE/split_20261007_014522/_sidebar.md)
