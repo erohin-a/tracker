@@ -336,3 +336,29 @@ ca.pem вшивается в установщик. Не нужно раздав�
 не решено: логировать ли сборку в audit_log (сейчас только stdout).
 
 Готово. Один файл выше. Следующий по индексу — 05_SCP\04_ADMIN.md.
+
+---
+
+## BuildTab (реализовано 2026-10-11)
+
+Вкладка «Сборка» в SCP (`control/build_tab.py`) — рабочий UI поверх `control/build.py`.
+
+### Кнопки
+| Кнопка | Что делает | Артефакт |
+|---|---|---|
+| Собрать полностью (PyInstaller + Inno) | ca.pem -> PyInstaller -> Inno Setup | `client/dist_installer/TrackerSetup.exe` |
+| Только PyInstaller | Шаг PyInstaller | `client/dist/Tracker/Tracker.exe` |
+| Только Inno Setup | Упаковка `dist/Tracker` | `client/dist_installer/TrackerSetup.exe` |
+
+### Чекбоксы
+- `clean` — удалить `build/` и `dist/` перед сборкой.
+- `skip PyInstaller` — работает с кнопкой «Полная сборка»: пропустить PyInstaller.
+
+### Tooltips
+Все кнопки и чекбоксы имеют всплывающие подсказки (см. `build_tab.py`).
+
+### Проверено 2026-10-11
+- PyInstaller 6.22.3, Python 3.14.7, Inno Setup 6.7.3.
+- Артефакт: `TrackerSetup.exe` = 34 204 040 байт.
+- PyInstaller под админом выдаёт `DEPRECATION` (PyInstaller 7 заблокирует) — запускать SCP из обычной сессии.
+- `pycparser.lextab/yacctab not found` — безвредно.

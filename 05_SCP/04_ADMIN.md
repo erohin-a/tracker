@@ -54,3 +54,38 @@
 - `05_SCP\02_CERTIFICATES.md` — вкладка «Сертификат».
 - `05_SCP\03_BUILD.md` — вкладка «Сборка».
 - `03_SERVER\04_AUTH.md` — логика аутентификации на сервере.
+
+
+---
+
+## AdminTab (реализовано 2026-10-11)
+
+Вкладка «Администрирование» в SCP (`control/admin_tab.py` + функции в `control/admin.py`).
+Вариант «Гибрид»: критичное — напрямую, удобное — через API.
+
+### Группа 1. Напрямую (аварийный режим)
+Работает даже если API лежит. Все операции — через `docker compose exec api python -c "..."` (см. `admin.py::_exec_py`).
+
+| Кнопка | Функция | Что делает |
+|---|---|---|
+| Сбросить пароль | `reset_admin_password` | bcrypt-хэш -> UPDATE `admin_users` -> audit_log |
+| Пересоздать admin | `recreate_admin` | INSERT/UPDATE admin с ролью admin |
+| Сменить API-ключ | `rotate_admin_api_key` | бэкап `.env` -> `_backup_env/<ts>.env`, новый `ADMIN_API_KEY` |
+| Диагностика БД | `db_diagnostics` | COUNT по admin_users/audit_log/work_sessions/records |
+
+### Группа 2. Через API (нормальный режим)
+Требует живой API. Внутри контейнера — те же функции bcrypt, что и на сервере (совместимость хэшей).
+
+| Кнопка | Что делает |
+|---|---|
+| Проверить API | GET `/api/v1/version` (verify=False) |
+| Статус сервисов | `docker compose ps` |
+
+### Архитектурные правила
+- SCP не импортирует `server.models` / `server.database` — только `docker compose exec`.
+- Bcrypt-хэши совместимы с сервером (одинаковая библиотека `bcrypt`).
+- Все действия пишутся в `audit_log` (actor="scp").
+
+### Проверено 2026-10-11
+- Кнопки работают через venv `client\.venv`.
+- Запуск: `D:\tracker\client\.venv\Scripts\python.exe -m control.gui_main`.

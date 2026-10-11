@@ -4453,3 +4453,50 @@ last_chat.txt
 И первой задачей ставим UX-аудит: я сделаю разбор текущего UI админки и клиента, покажу места под тултипы, найду неочевидные кнопки и предложу план улучшений. Потом SCP AdminTab.
 
 Этот чат закрываем --- он уже на ~72%. Увидимся в новом.
+
+
+---
+
+## Сессия 2026-10-11: SCP AdminTab + BuildTab
+
+### Что сделано
+
+**AdminTab** (`control/admin_tab.py` + функции в `control/admin.py`).
+Вариант «гибрид»: критичное — напрямую, удобное — через API.
+
+Группа 1 «Напрямую» (работает даже если API лежит, через `docker compose exec api python -c "..."`):
+- `reset_admin_password` — bcrypt → UPDATE admin_users + audit_log
+- `recreate_admin` — INSERT/UPDATE admin с ролью admin
+- `rotate_admin_api_key` — бэкап .env → `_backup_env/<ts>.env`, новый ADMIN_API_KEY
+- `db_diagnostics` — COUNT по admin_users/audit_log/work_sessions/records
+
+Группа 2 «Через API»:
+- Проверить API — GET /api/v1/version
+- Статус сервисов — docker compose ps
+
+**BuildTab** (`control/build_tab.py`) — UI поверх `control/build.py`:
+- 3 кнопки: полная сборка / только PyInstaller / только Inno Setup
+- чекбоксы clean, skip PyInstaller
+- tooltips на всех кнопках и чекбоксах
+- лог сборки в UI (через QThread)
+- артефакт: `client/dist_installer/TrackerSetup.exe` = 34 204 040 байт (собран 2026-10-11 23:11)
+
+### Изменения в gui.py
+- `PlaceholderTab` для Admin/Build заменены на `AdminTab()` / `BuildTab()`.
+- Импорты: `from control.admin_tab import AdminTab`, `from control.build_tab import BuildTab`.
+
+### Проблемы и решения
+- Кириллица в `gui.py` превратилась в кракозябры после `Set-Content -Encoding UTF8` (PS 5.1 пишет BOM/ломает cp1251). Починено через `[System.IO.File]::ReadAllText/WriteAllText` с явным UTF8-без-BOM.
+- PyInstaller под админом: `DEPRECATION` — PyInstaller 7 заблокирует. Запускать SCP из обычной сессии.
+- `pycparser.lextab/yacctab not found` — безвредно, не трогать.
+
+### KB обновлено
+- `05_SCP/03_BUILD.md` — секция BuildTab.
+- `05_SCP/04_ADMIN.md` — секция AdminTab.
+- `HANDOFF.md` — SCP блок переписан, P0/P1 актуализированы, готовность ~95%.
+- `00_INDEX.md` — 57 черновиков, 0 «не создан».
+
+### Что дальше
+1. ca.pem через UI (SCP, `certs.py` → renew).
+2. Публикация версий через UI (автообновление клиента).
+3. UX-аудит админки и клиента (тултипы, единый стиль ошибок).

@@ -15,7 +15,7 @@
 - **Стек сервера:** FastAPI + PostgreSQL 16 + SQLAlchemy 2.0 + Alembic + nginx + Docker.
 - **Стек клиента:** PyQt6 + httpx + pynput + keyring + cryptography + SQLite (WAL).
 - **SCP:** PyQt6 (отдельное приложение `control/`).
-- **Готовность:** ~93%. Осталось: установщик клиента, публикация версий, ca.pem через UI, i18n/темы до конца, SCP AdminTab/BuildTab, бэкапы, алерты.
+- **Готовность:** ~95%. Осталось: ca.pem через UI, i18n/темы до конца, бэкапы, алерты, публикация версий.
 
 ---
 
@@ -148,22 +148,17 @@ SCP AdminTab как «аварийный люк»	Критичные опера�
 SCP
 ✅ Вкладка «Сертификат».
 
-⚠️ BuildTab — заглушка.
-⚠️ AdminTab — заглушка. План (вариант «гибрид»):
-   * напрямую (работает, даже если api лежит):
-     - сброс пароля веб-админа (psycopg + bcrypt → UPDATE admin_users)
-     - смена ADMIN_API_KEY (.env + бэкап + предложение restart api)
-     - создание пользователя admin заново, если удалён
-   * через API (когда api жив):
-     - выпуск bootstrap-токенов
-     - выпуск re-registration-токенов
-     - диагностика: api/db/nginx/scheduler — «зелёный/жёлтый/красный»
+✅ BuildTab (2026-10-11): 3 кнопки (полная сборка / только PyInstaller / только Inno),
+   чекбоксы clean и skip PyInstaller, tooltips, лог сборки. control/build_tab.py.
+✅ AdminTab (2026-10-11), «гибрид». control/admin_tab.py + control/admin.py.
+   Напрямую (docker compose exec api): reset_admin_password, recreate_admin,
+   rotate_admin_api_key (бэкап .env), db_diagnostics.
+   Через API: Проверить API, Статус сервисов (docker compose ps).
 
 7. Что осталось (roadmap)
 🔴 P0 — блокеры
 
 
-Установщик клиента (Inno Setup).
 
 Публикация версий через UI.
 
@@ -174,12 +169,6 @@ SCP
 
 Тёмная тема до конца.
 
-SCP AdminTab — локальное управление без веб-доступа (гибрид):
-  напрямую: сброс пароля веб-админа, смена ADMIN_API_KEY,
-  пересоздание admin-пользователя (psycopg + bcrypt + .env);
-  через API: выпуск bootstrap/re-registration токенов,
-  диагностика api/db/nginx/scheduler.
-SCP BuildTab — сборка клиента (PyInstaller + Inno Setup).
 
 Бэкапы по расписанию.
 
@@ -241,11 +230,10 @@ Bootstrap-токен	bootstrap_tokens (хеш)
 Правило: реальные значения секретов не хранить в документации. Только форматы и процедуры ротации.
 
 10. Приоритеты на ближайшее время
-Закрыть P0: установщик клиента, публикация версий.
-Параллельно P1: SCP AdminTab (аварийный доступ), SCP BuildTab,
-UX-аудит админки и клиента (тултипы, интуитивность), ca.pem через UI.
+Закрыть P0: публикация версий через UI.
 
-Потом P1: ca.pem через UI, i18n, темы, SCP, бэкапы, алерты.
+Параллельно P1: ca.pem через UI, UX-аудит админки и клиента (тултипы, интуитивность),
+i18n, темы, бэкапы, алерты.
 
 Затем P2: импорт/экспорт, графики, опоздания, Live, «Сегодня».
 
@@ -257,41 +245,7 @@ UX-аудит админки и клиента (тултипы, интуитив
 
 ## 11. Что делать в следующем чате (после handoff)
 
-1. Глубокий UX-аудит админки и клиента:
-   - интуитивность навигации, названий, кнопок;
-   - что упущено, где пользователь может запутаться;
-   - список мест под всплывающие подсказки (title=, Bootstrap tooltip);
-   - единый стиль сообщений об ошибках и успехе.
-2. Затем — SCP AdminTab (вариант «гибрид»).
-3. Затем — установщик клиента (Inno Setup) и публикация версий.
+1. Реализовать ca.pem через UI (SCP).
+2. Публикация версий через UI.
+3. UX-аудит админки и клиента (тултипы, интуитивность, единый стиль ошибок).
 
-
-text
-
----
-
-## Шаг 2. Обновить `00_INDEX.md`
-
-Выполни в PowerShell:
-
-```powershell
-cd D:\tracker\docs
-
-# 1. Заменить все "не создан" на "черновик"
-(Get-Content 00_INDEX.md -Raw -Encoding UTF8).Replace('| не создан |', '| черновик |') |
-  Set-Content 00_INDEX.md -Encoding UTF8 -NoNewline
-
-# 2. Проверить результат
-Select-String -Path 00_INDEX.md -Pattern "черновик" | Measure-Object
-Select-String -Path 00_INDEX.md -Pattern "не создан" | Measure-Object
-Должно быть: 58 черновиков, 0 «не создан».
-
-Затем добавь строку про HANDOFF в конец таблицы индекса (перед 99_RAW или после). Вставь вручную или командой:
-
-powershell
-cd D:\tracker\docs
-$handoffRow = '| `HANDOFF.md` | Сводка проекта | Краткая выжимка: паспорт, архитектура, команды, состояние, roadmap, секреты | черновик | все KB-файлы |'
-$content = Get-Content 00_INDEX.md -Raw -Encoding UTF8
-# Вставить перед строкой с 99_RAW
-$content = $content -replace '(\| `99_RAW\\01_CHAT_HISTORY\.md`)', "$handoffRow`n`$1"
-Set-Content 00_INDEX.md -Value $content -Encoding UTF8 -NoNewline

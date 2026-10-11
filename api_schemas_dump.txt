@@ -1,0 +1,239 @@
+API:
+ROUTE: GET 
+SIG:   set_lang(code, request)
+---
+ROUTE: GET 
+SIG:   setup_form(request, db)
+---
+ROUTE: POST 
+SIG:   setup_submit(request, username, full_name, email, password, password_confirm, db)
+---
+ROUTE: GET 
+SIG:   login_form(request, next, db)
+---
+ROUTE: POST 
+SIG:   login(request, username, password, next, db)
+---
+ROUTE: GET 
+SIG:   logout(request)
+---
+ROUTE: GET 
+SIG:   dashboard(request, db, _)
+---
+ROUTE: GET 
+SIG:   dashboard(request, db, _)
+---
+ROUTE: GET 
+SIG:   settings_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   settings_save(idle_close_minutes, workday_start_hour, activity_gap_minutes, report_timezone, sync_interval, batch_size, active_window_interval, idle_threshold, count_weekends, reminder_enabled, reminder_threshold_minutes, reminder_repeat_minutes, reminder_max_per_day, end_of_day_hour, end_of_day_minute, stale_session_hours, db, _)
+---
+ROUTE: GET 
+SIG:   departments_list(request, db, _)
+---
+ROUTE: POST 
+SIG:   department_create(name, db, _)
+---
+ROUTE: POST 
+SIG:   department_rename(dep_id, name, db, _)
+---
+ROUTE: POST 
+SIG:   department_delete(dep_id, db, _)
+---
+ROUTE: GET 
+SIG:   employees_list(request, db, _)
+---
+ROUTE: POST 
+SIG:   employee_create(last_name, first_name, middle_name, external_id, department_id, db, _)
+---
+ROUTE: POST 
+SIG:   employee_edit(emp_id, last_name, first_name, middle_name, external_id, department_id, schedule_id, db, _)
+---
+ROUTE: GET 
+SIG:   computers_list(request, db, _)
+---
+ROUTE: POST 
+SIG:   computer_assign(comp_id, employee_id, db, _)
+---
+ROUTE: POST 
+SIG:   computer_revoke(comp_id, db, _)
+---
+ROUTE: POST 
+SIG:   computer_assign_unattached(comp_id, employee_id, db, _)
+---
+ROUTE: POST 
+SIG:   computer_delete_unattached(comp_id, date_from, date_to, db, _)
+---
+ROUTE: POST 
+SIG:   computer_activate(comp_id, db, _)
+---
+ROUTE: POST 
+SIG:   computer_soft_delete(comp_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   computer_restore(comp_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   computers_re_registration_token(comp_id, request, db, _)
+---
+ROUTE: GET 
+SIG:   tokens_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   tokens_issue(ttl_hours, issued_by, db, _)
+---
+ROUTE: POST 
+SIG:   token_delete(token_id, request, db, _)
+---
+ROUTE: GET 
+SIG:   reports_pivot_page(request, db, _)
+---
+ROUTE: GET 
+SIG:   reports_form(request, db, _)
+---
+ROUTE: POST 
+SIG:   pivot_data(request, employee_ids, department_ids, computer_ids, date_from, date_to, db, _)
+---
+ROUTE: POST 
+SIG:   reports_generate(request, employee_ids, department_ids, computer_ids, date_from, date_to, group_by, fmt, show_apps, show_abnormal, expand_details, db, _)
+---
+ROUTE: GET 
+SIG:   profile_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   profile_save(request, full_name, email, language, db, _)
+---
+ROUTE: POST 
+SIG:   profile_change_password(request, old_password, new_password, new_password_confirm, db, _)
+---
+ROUTE: GET 
+SIG:   users_list(request, db, _)
+---
+ROUTE: GET 
+SIG:   user_new_form(request, db, _)
+---
+ROUTE: POST 
+SIG:   user_new_submit(request, username, full_name, email, role, language, department_id, password, password_confirm, db, _)
+---
+ROUTE: GET 
+SIG:   user_edit_form(user_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   user_edit_submit(user_id, request, full_name, email, role, language, department_id, db, _)
+---
+ROUTE: POST 
+SIG:   user_toggle_active(user_id, request, db, _)
+---
+ROUTE: GET 
+SIG:   user_reset_password_form(user_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   user_reset_password_submit(user_id, request, new_password, new_password_confirm, db, _)
+---
+ROUTE: POST 
+SIG:   user_delete(user_id, request, db, _)
+---
+ROUTE: GET 
+SIG:   logins_page(request, db, _)
+---
+ROUTE: GET 
+SIG:   scheduler_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   scheduler_toggle(task_name, request, db, _)
+---
+ROUTE: POST 
+SIG:   scheduler_trigger(task_name, request, days, db, _)
+---
+ROUTE: POST 
+SIG:   scheduler_edit(task_name, request, schedule_cron, db, _)
+---
+ROUTE: POST 
+SIG:   scheduler_reload(request, db, _)
+---
+ROUTE: GET 
+SIG:   trash_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   trash_restore(request, item_type, item_id, db, _)
+---
+ROUTE: POST 
+SIG:   trash_delete_forever(request, item_type, item_id, db, _)
+---
+ROUTE: POST 
+SIG:   trash_empty(request, db, _)
+---
+ROUTE: GET 
+SIG:   sessions_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   sessions_delete_selected(request, uids, db, _)
+---
+ROUTE: POST 
+SIG:   sessions_delete_filtered(request, date_from, date_to, employee_id, computer_id, db, _)
+---
+ROUTE: POST 
+SIG:   session_delete_one(session_uid, request, db, _)
+---
+ROUTE: GET 
+SIG:   schedules_list(request, db, _)
+---
+ROUTE: GET 
+SIG:   schedule_new_form(request, db, _)
+---
+ROUTE: POST 
+SIG:   schedule_new_submit(request, name, work_start_hour, work_start_minute, work_end_hour, work_end_minute, late_threshold, overtime_threshold, flexible_hours, description, work_mon, work_tue, work_wed, work_thu, work_fri, work_sat, work_sun, lunch_enabled, lunch_start_hour, lunch_start_minute, lunch_end_hour, lunch_end_minute, db, _)
+---
+ROUTE: GET 
+SIG:   schedule_edit_form(sched_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   schedule_edit_submit(sched_id, request, name, work_start_hour, work_start_minute, work_end_hour, work_end_minute, late_threshold, overtime_threshold, flexible_hours, description, work_mon, work_tue, work_wed, work_thu, work_fri, work_sat, work_sun, lunch_enabled, lunch_start_hour, lunch_start_minute, lunch_end_hour, lunch_end_minute, db, _)
+---
+ROUTE: POST 
+SIG:   schedule_delete(sched_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   employee_fire(emp_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   employee_restore(emp_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   employee_delete_forever(emp_id, request, confirm_name, db, _)
+---
+ROUTE: POST 
+SIG:   computer_delete_forever(comp_id, request, confirm_name, db, _)
+---
+ROUTE: GET 
+SIG:   audit_page(request, db, _)
+---
+ROUTE: GET 
+SIG:   calendar_page(request, db, _)
+---
+ROUTE: POST 
+SIG:   calendar_generate(year, db, _)
+---
+ROUTE: POST 
+SIG:   calendar_reset(year, db, _)
+---
+ROUTE: GET 
+SIG:   employee_settings_page(emp_id, request, db, _)
+---
+ROUTE: POST 
+SIG:   employee_settings_save(emp_id, request, reminder_enabled, reminder_threshold_minutes, reminder_repeat_minutes, reminder_max_per_day, end_of_day_hour, end_of_day_minute, db, _)
+---
+ROUTE: POST 
+SIG:   employee_settings_reset(emp_id, request, db, _)
+---
+
+DB:
+MODEL: WorkSession
+---
+MODEL: Record
+---
+MODEL: AuditLog
+---
+MODEL: AdminUser
+---
