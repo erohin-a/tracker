@@ -1,4 +1,4 @@
-- [🏠 Главная (HANDOFF)](HANDOFF.md)
+﻿- [🏠 Главная (HANDOFF)](HANDOFF.md)
 
 - **Продукт**
   - [Обзор](01_PRODUCT/01_OVERVIEW.md)
@@ -73,11 +73,14 @@
   - [Скриншоты](99_RAW/02_SCREENSHOTS.md)
   - [Логи](99_RAW/03_LOGS.md)
 
-- **📜 BCE — все чаты по разработке**
+- **📜 BCE — разработка в чатах**
+  - [О разделе](BCE/README.md)
+  - [Часть 1](BCE/part_01.md)
+  - [Часть 2](BCE/part_02.md)
+  - [Часть 3](BCE/part_03.md)
+  - [Часть 4](BCE/part_04.md)
+  - [Часть 5](BCE/part_05.md)
+  - [Часть 6](BCE/part_06.md)
+  - [Часть 7](BCE/part_07.md)
+  - [Часть 8](BCE/part_08.md)
 
----
-
-## Полное руководство (BCE)
-
-- [BCE — оглавление](BCE/parts/00_BCE_INDEX.md)
-- [BCE — все части](BCE/parts/_sidebar.md)
