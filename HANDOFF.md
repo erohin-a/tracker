@@ -289,3 +289,25 @@ i18n, темы, бэкапы, алерты.
 - Созданы: 05_SCP\05_NETWORK.md, 05_SCP\06_SERVICES.md.
 - Дополнены: 05_SCP\02_CERTIFICATES.md, 06_DEPLOY\06_INSTALLER.md.
 - Обновлён: 00_INDEX.md (+2 строки).
+
+---
+
+## 13. Следующий этап: серверный инсталлятор (2026-10-12)
+
+Полный бриф — в 99_RAW\HANDOFF_INSTALLER.md.
+
+Коротко:
+- Единый TrackerServerSetup.exe для Windows.
+- Проверяет/ставит Docker Desktop.
+- Разворачивает проект, создаёт .env с автогенерацией секретов.
+- Выпускает self-signed сертификат (или через SCP).
+- Поднимает docker compose up -d --build.
+- Настраивает firewall (443).
+- Создаёт ярлыки: админка, SCP.
+- Режим «Обновить сервер» — без сброса БД.
+
+Переиспользуем готовое: control/deploy.py, control/build.py,
+client/installer.iss, docker-compose.yml, control/network_tab.py.
+
+Перед началом следующего чата приложить файлы из списка
+в HANDOFF_INSTALLER.md (раздел «Файлы, которые нужно прислать»).
