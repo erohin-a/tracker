@@ -40,6 +40,8 @@
 | `05_SCP\02_CERTIFICATES.md` | Сертификаты | Просмотр, обновление, отпечатки, backup, ca.pem для клиента | черновик | `06_DEPLOY\02_NGINX_TLS.md` |
 | `05_SCP\03_BUILD.md` | Сборка клиента | PyInstaller, Inno Setup, BuildTab, bootstrap-токен в установщике | черновик | `06_DEPLOY\06_INSTALLER.md` |
 | `05_SCP\04_ADMIN.md` | Администрирование | Сброс пароля веб-админа, смена ADMIN_API_KEY, диагностика | черновик | `03_SERVER\04_AUTH.md` |
+| `05_SCP\05_NETWORK.md` | Сеть | Вкладка «Сеть» SCP: LAN-IP, брандмауэр, deploy.json, hosts, URL клиента | черновик | `06_DEPLOY\02_NGINX_TLS.md` |
+| `05_SCP\06_SERVICES.md` | Сервисы | Вкладка «Сервисы» SCP: перезапуск контейнеров, логи, alembic | черновик | `03_SERVER\07_ALEMBIC.md` |
 | `06_DEPLOY\01_DOCKER.md` | Docker | docker-compose.yml, db/api/nginx, volumes, healthcheck | черновик | — |
 | `06_DEPLOY\02_NGINX_TLS.md` | Nginx и TLS | 443, proxy `/api/`, `/admin/`, сертификаты, HSTS | черновик | — |
 | `06_DEPLOY\03_WINDOWS_SETUP.md` | Установка на Windows | Docker Desktop, сертификаты, .env, первый запуск | черновик | `06_DEPLOY\01_DOCKER.md` |

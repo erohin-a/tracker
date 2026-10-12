@@ -427,3 +427,58 @@ ca.pem вшивается в установщик. Не нужно раздав�
 не решено: логировать ли сборку в audit_log (сейчас только stdout).
 
 Готово. Один файл выше. Следующий по индексу — 07_QUALITY\01_TESTING.md.
+
+---
+
+## Дополнение 2026-10-12: вшивание server_url из deploy.json
+
+До этого обновления установщик привозил клиенту только ca.pem, а
+адрес сервера брался из значения по умолчанию (https://127.0.0.1).
+Это работало только на машине разработчика.
+
+Теперь цикл замкнут: SCP -> deploy.json -> client/.env -> установщик
+-> клиент.
+
+### Как это работает
+
+1. В SCP на вкладке «Сеть» в блоке «Адрес для клиента» заполняется
+   server_url (например, https://192.168.0.35), жмётся
+   «Сохранить в deploy.json».
+2. При сборке установщика control/build.py вызывает функцию
+   prepare_client_env():
+   - читает D:\tracker\deploy.json, поле server_url;
+   - делает бэкап старого client/.env в client/_backup_env/;
+   - перезаписывает client/.env со значением
+     TRACKER_SERVER_URL=<url из deploy.json>;
+   - остальные ключи (TRACKER_PIN, TRACKER_VERSION) сохраняет.
+3. PyInstaller собирает Tracker.exe как обычно.
+4. Inno Setup по installer.iss копирует:
+   - client\ca.pem   -> %APPDATA%\Tracker\ca.pem;
+   - client\.env     -> %APPDATA%\Tracker\.env (новое).
+5. Клиент при первом запуске читает %APPDATA%\Tracker\.env (см.
+   client/config.py, _candidates[1]) и берёт оттуда SERVER_URL.
+
+Пользователь может поменять адрес через настройки клиента — тогда
+значение сохранится в config.json и перекроет .env
+(приоритет: config.json > .env > дефолт).
+
+### Изменения в installer.iss
+В секции [Files] добавлена строка:
+
+    Source: ".env"; DestDir: "{userappdata}\Tracker"; DestName: ".env"; Flags: ignoreversion skipifsourcedoesntexist
+
+### Изменения в build.py
+Добавлена функция prepare_client_env() и её вызов в начале
+build_client_installer() перед копированием сертификата.
+В результат сборки добавлено поле server_url_embedded.
+
+### Лог сборки
+Теперь выглядит так:
+
+    [0/4] Подготовка client/.env (server_url из deploy.json)...
+      OK  Бэкап старого .env -> 20261012_143022.env
+      OK  client/.env: TRACKER_SERVER_URL=https://192.168.0.35
+    [1/4] Копирование сертификата...
+      OK  fullchain.pem -> client/ca.pem (N байт)
+    [2/4] Сборка Tracker.exe через PyInstaller...
+    [3/4] Сборка TrackerSetup.exe через Inno Setup...

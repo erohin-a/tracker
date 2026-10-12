@@ -249,3 +249,43 @@ i18n, темы, бэкапы, алерты.
 2. Публикация версий через UI.
 3. UX-аудит админки и клиента (тултипы, интуитивность, единый стиль ошибок).
 
+---
+
+## 12. Обновление 2026-10-12 (после handoff)
+
+### Реализовано в SCP
+- Вкладка «Сервисы» (control/services_tab.py): перезапуск
+  контейнеров (nginx/api/db/всё/полная пересборка), логи, alembic
+  current/history/heads. Все кнопки с tooltips.
+- Вкладка «Сеть» (control/network_tab.py): LAN-IP, правило
+  брандмауэра Tracker HTTPS, редактирование deploy.json,
+  hosts-строка, кнопка «Открыть админку».
+- Кнопка «Быстрое продление (только срок)» в CertificateTab.
+- Кнопка «Перевыпуск сертификата с LAN-IP» на вкладке «Сеть».
+- Tooltips на всех новых и ключевых старых элементах.
+- Вшивание server_url из deploy.json в client/.env при сборке
+  (control/build.py, prepare_client_env).
+- installer.iss: client/.env -> %APPDATA%\Tracker\.env.
+
+### Новые файлы
+- control/deploy.py — модуль чтения/записи deploy.json.
+- control/services_tab.py — вкладка «Сервисы».
+- control/network_tab.py — вкладка «Сеть».
+- D:\tracker\deploy.json — единый конфиг деплоя.
+
+### Изменены
+- control/gui.py — подключены ServicesTab и NetworkTab.
+- control/build.py — prepare_client_env().
+- client/installer.iss — .env в %APPDATA%\Tracker\.
+
+### Проверено
+- Сертификат перевыпущен: SAN = localhost, 127.0.0.1, 192.168.0.35,
+  ws147, tracker, tracker.local.
+- С андроид-телефона через VPN: https://192.168.0.35/admin/login
+  открывается.
+- Установщик собран (34 МБ), ca.pem + .env вшиты.
+
+### Обновлено в KB
+- Созданы: 05_SCP\05_NETWORK.md, 05_SCP\06_SERVICES.md.
+- Дополнены: 05_SCP\02_CERTIFICATES.md, 06_DEPLOY\06_INSTALLER.md.
+- Обновлён: 00_INDEX.md (+2 строки).
