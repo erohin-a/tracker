@@ -1,0 +1,94 @@
+=== last_chat.txt ===
+Сессия: 2026-10-12
+Тема: SCP — Сервисы, Сеть, продление сертификата, deploy.json, вшивание URL
+
+--- СДЕЛАНО ---
+
+1. Вкладка «Сервисы» (control/services_tab.py)
+   - Перезапуски: nginx, api, db, всё, полная пересборка (down && up -d --build)
+   - Логи: api/nginx/db (tail 30), docker compose ps
+   - Alembic: current/history/heads (upgrade НЕ выведен — только терминал)
+   - Все команды в QThread, тултипы на каждой кнопке
+   - Автовыбор кодировки: cp866 для netsh/cmd/powershell, utf-8 для docker
+
+2. Вкладка «Сеть» (control/network_tab.py)
+   - Показ hostname + всех IPv4 + LAN-IP
+   - Проверка: входит ли LAN-IP в SAN сертификата (зелёный/красный статус)
+   - Правило брандмауэра Tracker HTTPS (add/check/del через UAC)
+   - Кнопка «⚡ Перевыпустить сертификат с LAN-IP» — автоrenew с SAN
+     localhost, 127.0.0.1, <LAN-IP>, <hostname>, <alias>, <alias>.local
+   - Редактирование deploy.json (server_url, admin_url, hostname_alias)
+   - Кнопка «Открыть админку в браузере»
+   - hosts-строка + копирование в буфер
+
+3. CertificateTab — кнопка «⚡ Быстрое продление (только срок)»
+   - QuickRenewDialog: спрашивает только срок, CN/SAN берёт из текущего
+   - Тултипы на всех кнопках/полях/чекбоксах
+
+4. deploy.json — единый конфиг деплоя (D:\tracker\deploy.json)
+   - Модуль control/deploy.py: load/save/set_values/get/ensure_file
+   - Ключи: server_url, admin_url, cert_cn, cert_san, cert_days,
+     hostname_alias, last_lan_ip
+
+5. Вшивание server_url в установщик
+   - control/build.py: prepare_client_env() — перед сборкой читает
+     deploy.json, пишет TRACKER_SERVER_URL в client/.env
+   - Бэкап старого .env в client/_backup_env/<ts>.env
+   - installer.iss: client/.env → %APPDATA%\Tracker\.env
+   - Клиент читает URL из config.json > .env > дефолт
+
+6. Брандмауэр — рабочий
+   - Фикс: Start-Process -ArgumentList передавать ОДНОЙ строкой,
+     иначе "Tracker HTTPS" развалится на два аргумента (name=Tracker + HTTPS)
+   - Итог: правило Tracker HTTPS, Enabled=Yes, dir=in, TCP:443
+
+--- ПРОВЕРЕНО ---
+
+- Сертификат перевыпущен: CN=192.168.0.35, SAN = localhost, 127.0.0.1,
+  192.168.0.35, ws147, tracker, tracker.local. Срок 365 дней.
+- С андроид-телефона через VPN: https://192.168.0.35/admin/login работает.
+- Установщик пересобран (34 МБ), ca.pem + .env вшиты.
+- В логе сборки: [0/4] OK client/.env: TRACKER_SERVER_URL=https://192.168.0.35
+
+--- ИЗМЕНЕНО / НОВОЕ ---
+
+Новое:
+- control/deploy.py
+- control/services_tab.py
+- control/network_tab.py
+- D:\tracker\deploy.json
+
+Изменено:
+- control/gui.py — подключены ServicesTab и NetworkTab
+- control/build.py — prepare_client_env(), шаги 0/4..3/4
+- client/installer.iss — копирование .env в %APPDATA%\Tracker\
+- KB: 05_SCP/05_NETWORK.md, 05_SCP/06_SERVICES.md (новые),
+  05_SCP/02_CERTIFICATES.md, 06_DEPLOY/06_INSTALLER.md (дополнены),
+  00_INDEX.md (+2 строки), HANDOFF.md (§12)
+
+--- KB ОПУБЛИКОВАНО ---
+Коммит 69293ee, https://erohin-a.github.io/tracker/
+
+--- НЕ ДОДЕЛАНО МЕЛОЧЬ ---
+- _backup_kb/ уехал в git (docs). Фикс: _fix_gitignore.py + git rm --cached.
+  См. D:\tracker\control\_fix_gitignore.py
+
+--- ЧТО ДАЛЬШЕ ---
+
+🔴 P0 — Публикация версий через UI (блокер).
+   Инфраструктура готова: deploy.json, вкладка «Сборка», вшивание URL.
+   Осталось: API версий, страница админки, кнопка «Опубликовать» в SCP,
+   updater.py клиента.
+
+🟡 P1: полный i18n клиента, тёмная тема до конца, бэкапы по расписанию,
+   логи клиента в админке, алерты, UX-аудит админки.
+
+--- КОМАНДЫ ---
+
+SCP:      D:\tracker\client\.venv\Scripts\python.exe -m control.gui_main
+Сборка:   вкладка «Сборка» в SCP, или python -m control.control build-client
+Сервер:   cd D:\tracker; docker compose ps; logs api --tail=30
+          restart api (HTML); down && up -d --build (Python)
+KB сайт:  cd D:\tracker\docs; .\update_site.bat
+
+=== Конец last_chat.txt ===
