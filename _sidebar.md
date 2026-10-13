@@ -85,4 +85,5 @@
   - [Часть 8](BCE/part_08.md)
   - [Часть 9](BCE/part_09.md)
   - [Часть 10](BCE/part_10.md)
+  - [Часть 11](BCE/part_11.md)
 
